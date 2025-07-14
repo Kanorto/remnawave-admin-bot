@@ -54,4 +54,3 @@ if __name__ == '__main__':
         logger.info("Bot stopped!")
     except Exception as e:
         logger.error(f"Error in main: {e}", exc_info=True)
-\`\`\`
