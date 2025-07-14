@@ -92,7 +92,7 @@ async def handle_users_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     elif data == "create_user" or data == "menu_create_user":
         await start_create_user(update, context)
-        return CREATE_USER
+        return CREATE_USER_FIELD
 
     elif data == "back_to_main":
         await show_main_menu(update, context)
@@ -1122,7 +1122,7 @@ async def start_create_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Start asking for fields
     await ask_for_field(update, context)
-    return CREATE_USER
+    return CREATE_USER_FIELD
 
 async def ask_for_field(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Ask for a field value when creating a user"""
@@ -1209,7 +1209,7 @@ async def handle_create_user_input(update: Update, context: ContextTypes.DEFAULT
             # Skip this field
             context.user_data["current_field_index"] += 1
             await ask_for_field(update, context)
-            return CREATE_USER
+            return CREATE_USER_FIELD
         
         elif data == "cancel_create":
             # Cancel user creation
@@ -1226,7 +1226,7 @@ async def handle_create_user_input(update: Update, context: ContextTypes.DEFAULT
             context.user_data["create_user"][field] = value
             context.user_data["current_field_index"] += 1
             await ask_for_field(update, context)
-            return CREATE_USER
+            return CREATE_USER_FIELD
 
     else:  # Text input
         try:
@@ -1338,10 +1338,10 @@ async def handle_create_user_input(update: Update, context: ContextTypes.DEFAULT
             # Store the value and move to the next field
             context.user_data["create_user"][field] = value
             context.user_data["current_field_index"] += 1
-            
+
             # Ask for the next field
             await ask_for_field(update, context)
-            return CREATE_USER
+            return CREATE_USER_FIELD
             
         except Exception as e:
             # Handle any unexpected errors
