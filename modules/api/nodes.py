@@ -76,3 +76,15 @@ class NodeAPI:
             "end": end_date
         }
         return await RemnaAPI.get("nodes/usage/range", params)
+
+    @staticmethod
+    async def add_inbound_to_all_nodes(inbound_uuid):
+        """Add inbound to all nodes"""
+        data = {"inboundUuid": inbound_uuid}
+        return await RemnaAPI.post("nodes/bulk/add-inbound", data)
+
+    @staticmethod
+    async def remove_inbound_from_all_nodes(inbound_uuid):
+        """Remove inbound from all nodes"""
+        data = {"inboundUuid": inbound_uuid}
+        return await RemnaAPI.post("nodes/bulk/remove-inbound", data)
