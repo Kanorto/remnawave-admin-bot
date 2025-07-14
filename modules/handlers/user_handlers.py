@@ -490,6 +490,19 @@ async def handle_text_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Check if we're waiting for HWID input
     if context.user_data.get("waiting_for") == "hwid":
         return await handle_hwid_input(update, context)
+
+    # Host creation/editing
+    if context.user_data.get("waiting_for") == "create_host":
+        from modules.handlers.host_handlers import handle_create_host_input
+        return await handle_create_host_input(update, context)
+
+    if context.user_data.get("waiting_for") == "edit_host":
+        from modules.handlers.host_handlers import handle_edit_host_input
+        return await handle_edit_host_input(update, context)
+
+    if context.user_data.get("waiting_for") == "bulk_update_all":
+        from modules.handlers.bulk_handlers import handle_bulk_update_all_input
+        return await handle_bulk_update_all_input(update, context)
     
     # Check if we're searching for a user
     search_type = context.user_data.get("search_type")

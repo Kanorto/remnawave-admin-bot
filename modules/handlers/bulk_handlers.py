@@ -87,9 +87,11 @@ async def handle_bulk_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return BULK_CONFIRM
 
     elif data == "bulk_update_all":
-        # TODO: Implement bulk update all
+        context.user_data["waiting_for"] = "bulk_update_all"
         await query.edit_message_text(
-            "🚧 Функция массового обновления находится в разработке.",
+            "Введите параметры обновления в формате `field=value`.\n"
+            "Можно указать несколько пар через пробел.\n"
+            "Пример: `trafficLimitBytes=0 expireAt=2024-12-31`",
             parse_mode="Markdown"
         )
         return BULK_MENU
@@ -175,4 +177,39 @@ async def handle_bulk_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE
         await show_bulk_menu(update, context)
         return BULK_MENU
 
+    return BULK_MENU
+
+async def handle_bulk_update_all_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Process text input for bulk update of all users"""
+    text = update.message.text.strip()
+    fields = {}
+    for pair in text.split():
+        if '=' not in pair:
+            continue
+        key, value = pair.split('=', 1)
+        if key == 'trafficLimitBytes':
+            try:
+                fields[key] = int(value)
+            except ValueError:
+                continue
+        else:
+            fields[key] = value
+
+    result = None
+    if fields:
+        result = await BulkAPI.bulk_update_all_users(fields)
+
+    keyboard = [[InlineKeyboardButton("🔙 Назад", callback_data="back_to_bulk")]]
+    if result:
+        message = "✅ Массовое обновление успешно выполнено."
+    else:
+        message = "❌ Не удалось выполнить массовое обновление."
+
+    await update.message.reply_text(
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode="Markdown",
+    )
+
+    context.user_data.pop("waiting_for", None)
     return BULK_MENU

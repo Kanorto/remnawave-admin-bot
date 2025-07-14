@@ -28,6 +28,16 @@ class HostAPI:
     async def delete_host(uuid):
         """Delete a host"""
         return await RemnaAPI.delete(f"hosts/{uuid}")
+
+    @staticmethod
+    async def enable_host(uuid):
+        """Enable a host"""
+        return await RemnaAPI.post(f"hosts/{uuid}/actions/enable")
+
+    @staticmethod
+    async def disable_host(uuid):
+        """Disable a host"""
+        return await RemnaAPI.post(f"hosts/{uuid}/actions/disable")
     
     @staticmethod
     async def reorder_hosts(hosts_data):
