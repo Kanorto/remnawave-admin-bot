@@ -54,7 +54,8 @@ def format_user_details(user):
     
     message += f"📊 *Статус:* {status_emoji} {user['status']}\n"
     message += f"📈 *Трафик:* {format_bytes(user['usedTrafficBytes'])}/{format_bytes(user['trafficLimitBytes'])}\n"
-    message += f"🔄 *Стратегия сброса:* {user['trafficLimitStrategy']}\n"
+    # Escape strategy in case it contains underscores or other markdown symbols
+    message += f"🔄 *Стратегия сброса:* {escape_markdown(user['trafficLimitStrategy'])}\n"
     message += f"{expire_status} *Истекает:* {expire_text}\n\n"
     
     if user.get('description'):
