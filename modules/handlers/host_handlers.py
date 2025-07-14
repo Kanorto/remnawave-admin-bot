@@ -1,5 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
+from modules.utils.auth import check_admin
 
 from modules.config import MAIN_MENU, HOST_MENU
 from modules.api.hosts import HostAPI
@@ -24,6 +25,7 @@ async def show_hosts_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         parse_mode="Markdown"
     )
 
+@check_admin
 async def handle_hosts_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle hosts menu selection"""
     query = update.callback_query

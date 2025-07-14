@@ -1,5 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
+from modules.utils.auth import check_admin
 
 from modules.config import MAIN_MENU, STATS_MENU
 from modules.api.system import SystemAPI
@@ -25,6 +26,7 @@ async def show_stats_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         parse_mode="Markdown"
     )
 
+@check_admin
 async def handle_stats_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle statistics menu selection"""
     query = update.callback_query
