@@ -106,6 +106,26 @@ class RemnaAPI:
         except Exception as e:
             logger.error(f"Unexpected error in PATCH {endpoint}: {str(e)}")
             return None
+
+    @staticmethod
+    async def put(endpoint, data=None):
+        """Make a PUT request to the API"""
+        try:
+            # Log request data for debugging
+            logger.debug(f"PUT request to {endpoint} with data: {json.dumps(data, indent=2)}")
+
+            response = requests.put(f"{API_BASE_URL}/{endpoint}", headers=get_headers(), json=data)
+            response.raise_for_status()
+            json_response = response.json()
+            return json_response.get("response") if isinstance(json_response, dict) else json_response
+        except requests.exceptions.RequestException as e:
+            logger.error(f"API PUT error: {endpoint} - {str(e)}")
+            if hasattr(e, 'response') and e.response:
+                logger.error(f"Response: {e.response.status_code} - {e.response.text}")
+            return None
+        except Exception as e:
+            logger.error(f"Unexpected error in PUT {endpoint}: {str(e)}")
+            return None
     
     @staticmethod
     async def delete(endpoint, params=None):
