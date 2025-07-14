@@ -3,7 +3,10 @@ from telegram.ext import ContextTypes
 
 from modules.config import MAIN_MENU, INBOUND_MENU
 from modules.api.inbounds import InboundAPI
-from modules.api.users import UserAPI
+from modules.api.users import (
+    add_inbound_to_all_users as api_add_inbound_to_all_users,
+    remove_inbound_from_all_users as api_remove_inbound_from_all_users,
+)
 from modules.api.nodes import NodeAPI
 from modules.utils.formatters import format_inbound_details
 from modules.handlers.start_handler import show_main_menu
@@ -228,7 +231,7 @@ async def add_inbound_to_all_users(update: Update, context: ContextTypes.DEFAULT
     await update.callback_query.answer("➕ Добавляю Inbound всем пользователям...")
     
     try:
-        result = await UserAPI.add_inbound_to_all_users(uuid)
+        result = await api_add_inbound_to_all_users(uuid)
         await update.callback_query.edit_message_text(f"✅ Inbound успешно добавлен всем пользователям. Затронуто пользователей: {result}")
     except Exception as e:
         await update.callback_query.edit_message_text(f"❌ Ошибка при добавлении Inbound всем пользователям: {e}")
@@ -248,7 +251,7 @@ async def remove_inbound_from_all_users(update: Update, context: ContextTypes.DE
     await update.callback_query.answer("➖ Удаляю Inbound у всех пользователей...")
     
     try:
-        result = await UserAPI.remove_inbound_from_all_users(uuid)
+        result = await api_remove_inbound_from_all_users(uuid)
         await update.callback_query.edit_message_text(f"✅ Inbound успешно удален у всех пользователей. Затронуто пользователей: {result}")
     except Exception as e:
         await update.callback_query.edit_message_text(f"❌ Ошибка при удалении Inbound у всех пользователей: {e}")

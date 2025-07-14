@@ -172,7 +172,7 @@ class UserAPI:
             data["userAgent"] = user_agent
         
         return await RemnaAPI.post("hwid/devices", data)
-    
+
     @staticmethod
     async def delete_user_hwid_device(uuid, hwid):
         """Delete a HWID device from a user"""
@@ -180,5 +180,21 @@ class UserAPI:
             "userUuid": uuid,
             "hwid": hwid
         }
-        
+
         return await RemnaAPI.post("hwid/devices/delete", data)
+
+
+async def add_inbound_to_all_users(inbound_uuid):
+    """Add the specified inbound to all users."""
+    return await RemnaAPI.post(
+        "users/bulk/add-inbound",
+        {"inboundUuid": inbound_uuid},
+    )
+
+
+async def remove_inbound_from_all_users(inbound_uuid):
+    """Remove the specified inbound from all users."""
+    return await RemnaAPI.post(
+        "users/bulk/remove-inbound",
+        {"inboundUuid": inbound_uuid},
+    )
