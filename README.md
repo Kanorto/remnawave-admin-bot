@@ -19,7 +19,7 @@ Telegram bot for managing Remnawave proxy service.
    \`\`\`
    pip install -r requirements.txt
    \`\`\`
-3. Create a `.env` file based on `.env.example` and fill in your API credentials
+3. Copy `.env.example` to `.env` and fill in your API credentials
 4. Run the bot:
    \`\`\`
    python main.py
