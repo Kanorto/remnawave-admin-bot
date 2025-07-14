@@ -3,6 +3,7 @@ import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler
 import re
+from modules.utils.auth import check_admin
 
 from modules.config import (
     MAIN_MENU, USER_MENU, SELECTING_USER, WAITING_FOR_INPUT, CONFIRM_ACTION,
@@ -37,6 +38,7 @@ async def show_users_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         parse_mode="Markdown"
     )
 
+@check_admin
 async def handle_users_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle users menu selection"""
     query = update.callback_query
@@ -192,6 +194,7 @@ async def send_users_page(update: Update, context: ContextTypes.DEFAULT_TYPE):
             parse_mode="Markdown"
         )
 
+@check_admin
 async def handle_user_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle user selection"""
     query = update.callback_query
@@ -307,6 +310,7 @@ async def show_user_details(update: Update, context: ContextTypes.DEFAULT_TYPE, 
     context.user_data["current_user"] = user
     return SELECTING_USER
 
+@check_admin
 async def handle_user_action(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle user action"""
     query = update.callback_query
@@ -421,6 +425,7 @@ async def handle_user_action(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
     return SELECTING_USER
 
+@check_admin
 async def handle_action_confirmation(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle action confirmation"""
     query = update.callback_query
@@ -485,6 +490,7 @@ async def handle_action_confirmation(update: Update, context: ContextTypes.DEFAU
 
     return SELECTING_USER
 
+@check_admin
 async def handle_text_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle text input"""
     # Check if we're waiting for HWID input
@@ -865,6 +871,7 @@ async def start_edit_user(update: Update, context: ContextTypes.DEFAULT_TYPE, uu
 
     return EDIT_USER
 
+@check_admin
 async def handle_edit_field_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle edit field selection"""
     query = update.callback_query
@@ -944,6 +951,7 @@ async def handle_edit_field_selection(update: Update, context: ContextTypes.DEFA
 
     return EDIT_USER
 
+@check_admin
 async def handle_edit_field_value(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle edit field value"""
     query = update.callback_query
@@ -1188,6 +1196,7 @@ async def ask_for_field(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     return CREATE_USER_FIELD
 
+@check_admin
 async def handle_create_user_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle user input when creating a user"""
     query = update.callback_query

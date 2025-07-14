@@ -1,5 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
+from modules.utils.auth import check_admin
 
 from modules.config import MAIN_MENU, NODE_MENU
 from modules.api.nodes import NodeAPI
@@ -26,6 +27,7 @@ async def show_nodes_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         parse_mode="Markdown"
     )
 
+@check_admin
 async def handle_nodes_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle nodes menu selection"""
     query = update.callback_query

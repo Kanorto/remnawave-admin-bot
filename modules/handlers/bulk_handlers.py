@@ -1,5 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
+from modules.utils.auth import check_admin
 
 from modules.config import MAIN_MENU, BULK_MENU, BULK_ACTION, BULK_CONFIRM
 from modules.api.bulk import BulkAPI
@@ -28,6 +29,7 @@ async def show_bulk_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     return BULK_MENU
 
+@check_admin
 async def handle_bulk_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle bulk operations menu selection"""
     query = update.callback_query
@@ -106,6 +108,7 @@ async def handle_bulk_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     return BULK_MENU
 
+@check_admin
 async def handle_bulk_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle bulk operation confirmation"""
     query = update.callback_query

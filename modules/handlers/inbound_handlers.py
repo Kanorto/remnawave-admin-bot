@@ -1,5 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
+from modules.utils.auth import check_admin
 
 from modules.config import MAIN_MENU, INBOUND_MENU
 from modules.api.inbounds import InboundAPI
@@ -29,6 +30,7 @@ async def show_inbounds_menu(update: Update, context: ContextTypes.DEFAULT_TYPE)
         parse_mode="Markdown"
     )
 
+@check_admin
 async def handle_inbounds_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle inbounds menu selection"""
     query = update.callback_query
