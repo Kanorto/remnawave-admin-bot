@@ -3,8 +3,8 @@ from telegram.ext import ContextTypes
 
 from modules.config import MAIN_MENU, NODE_MENU
 from modules.api.nodes import NodeAPI
-from modules.utils.formatters import format_node_details
-from modules.utils.formatters import format_bytes
+from datetime import datetime, timedelta
+from modules.utils.formatters import format_node_details, format_bytes, escape_markdown
 from modules.handlers.start_handler import show_main_menu
 
 async def show_nodes_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -303,17 +303,40 @@ async def restart_node(update: Update, context: ContextTypes.DEFAULT_TYPE, uuid)
     return NODE_MENU
 
 async def show_node_stats(update: Update, context: ContextTypes.DEFAULT_TYPE, uuid):
-    """Show node statistics"""
-    # Placeholder for node statistics logic
-    message = "🚧 Статистика сервера в разработке..."
-    
-    keyboard = [[InlineKeyboardButton("🔙 Назад к деталям", callback_data=f"view_node_{uuid}")]]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
+    """Show node statistics for the last 7 days"""
+    node = await NodeAPI.get_node_by_uuid(uuid)
+    end_date = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    start_date = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+    usage = await NodeAPI.get_node_usage_by_range(uuid, start_date, end_date)
+
+    if not node or not usage:
+        keyboard = [[InlineKeyboardButton("🔙 Назад", callback_data=f"view_node_{uuid}")]]
+        await update.callback_query.edit_message_text(
+            "❌ Статистика не найдена.",
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode="Markdown",
+        )
+        return NODE_MENU
+
+    message = f"📊 *Статистика сервера {escape_markdown(node['name'])} за 7 дней*\n\n"
+
+    sorted_usage = sorted(usage, key=lambda x: x.get('total', 0), reverse=True)
+
+    for i, user in enumerate(sorted_usage[:10]):
+        username = user.get('username', 'unknown')
+        total = user.get('total', 0)
+        message += f"{i+1}. {escape_markdown(username)} - {format_bytes(total)}\n"
+
+    keyboard = [
+        [InlineKeyboardButton("🔄 Обновить", callback_data=f"node_stats_{uuid}")],
+        [InlineKeyboardButton("🔙 Назад", callback_data=f"view_node_{uuid}")],
+    ]
+
     await update.callback_query.edit_message_text(
         message,
-        reply_markup=reply_markup,
-        parse_mode="Markdown"
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode="Markdown",
     )
-    
+
     return NODE_MENU
